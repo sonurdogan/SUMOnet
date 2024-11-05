@@ -19,6 +19,7 @@ class Data:
                
                 self.posTrainDataPath, self.negTrainDataPath = self.get_train_data_path()
                 self.posTestDataPath, self.negTestDataPath = self.get_test_data_path()
+                self.posHardTestDataPath, self.negHardTestDataPath = self.get_hard_test_data_path()
 
 
         @staticmethod
@@ -55,6 +56,22 @@ class Data:
 
                 return posTestDataPath, negTestDataPath
 
+        @staticmethod
+        def get_hard_test_data_path():
+                """
+                Function that returns hard test data path.
+        
+                Returns:
+                posTestDataPath: The data path that contains positive hard test samples.
+                negTestDataPath: The data path that contains negative hard test samples.
+                
+                """
+
+                posHardTestDataPath = os.path.join(parent_dir,"data","hard_test_samples","hard_samples_positive.fasta") 
+                negHardTestDataPath = os.path.join(parent_dir,"data","hard_test_samples","hard_samples_negative.fasta") 
+
+                return posHardTestDataPath, negHardTestDataPath
+        
         @staticmethod
         def get_new_data(filePath:str) -> List[str]:
         
@@ -281,3 +298,20 @@ class Data:
 
 
                 return X_train, y_train, X_test, y_test
+        
+        def load_hard_test_data(self) -> Tuple[List[str], List[int]]:
+                """
+                Function that returns hard test sequences and their labels.
+        
+                Returns:
+                X_test: Hard Test sequences
+                y_test: Hard Test labels
+                """
+
+                posHardTestData = self.get_new_data(self.posHardTestDataPath)
+                negHardTestData = self.get_new_data(self.negHardTestDataPath)
+
+                X_test = posHardTestData + negHardTestData
+                y_test =  [1]*len(posHardTestData) + [0]*len(negHardTestData)
+
+                return X_test, y_test
